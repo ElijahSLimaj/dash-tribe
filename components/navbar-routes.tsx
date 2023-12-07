@@ -9,7 +9,6 @@ import Link from "next/link";
 
 const NavbarRoutes = () => {
     const pathName = usePathname();
-    const useRoutes = useRouter();
 
     const isTeacherPage = pathName?.startsWith("/teacher");
     const isPlayerPage = pathName?.includes("/chapter");
@@ -21,10 +20,12 @@ const NavbarRoutes = () => {
             {
                 isTeacherPage || isPlayerPage ?
                     (
-                        <Button size="sm" variant="ghost">
-                            <LogOut className="h-4 w-4 mr-2" />
-                            Exit
-                        </Button>
+                        <Link href="/">
+                            <Button size="sm" variant="ghost">
+                                <LogOut className="h-4 w-4 mr-2" />
+                                Exit
+                            </Button>
+                        </Link>
                     ) : (
                         <Link href="/teacher/courses">
                             <Button size="sm" variant="ghost">

@@ -6,13 +6,13 @@ import { Pencil, PlusCircle, ImageIcon, File, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Attachments, Course } from "@prisma/client";
+import { Attachment, Course } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 
 interface AttachmentFormProps {
-  initialData: Course & { attachments: Attachments[] };
+  initialData: Course & { attachments: Attachment[] };
   courseId: string;
 };
 

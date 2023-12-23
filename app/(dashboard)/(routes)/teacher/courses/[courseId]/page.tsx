@@ -9,12 +9,14 @@ import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
 import { AttachmentForm } from "./_components/attachment-form";
+import { ChaptersForm } from "./_components/chapters-form";
+import { use } from "react";
 
 const CourseIdPage = async ({ params }: {
     params: { courseId: string }
 }) => {
 
-    const userId = auth();
+    const { userId } = auth();
 
     if (!userId) {
         return redirect("/");
@@ -23,8 +25,14 @@ const CourseIdPage = async ({ params }: {
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,
+            userId
         },
         include: {
+            chapters: {
+                orderBy: {
+                    position: "asc",
+                },
+            },
             attachments: {
                 orderBy: {
                     createdAt: "desc",
@@ -36,7 +44,7 @@ const CourseIdPage = async ({ params }: {
     const categories = await db.category.findMany({
         orderBy: {
             name: "asc",
-        }
+        },
     });
 
     if (!course) {
@@ -49,11 +57,15 @@ const CourseIdPage = async ({ params }: {
         course.imageUrl,
         course.price,
         course.categoryId,
+        course.chapters.some(chapter => chapter.isPublished),
     ];
 
     const totalFields = requiredFields.length;
     const completedFields = requiredFields.filter(Boolean).length;
-    const completionText = `${completedFields}/${totalFields}`;
+
+    const completionText = `(${completedFields}/${totalFields})`;
+
+    const isComplete = requiredFields.every(Boolean);
 
     return (
         <div className="p-6">
@@ -110,7 +122,10 @@ const CourseIdPage = async ({ params }: {
                             </h2>
                         </div>
                         <div>
-                            TODO: Chapters
+                            <ChaptersForm
+                                initialData={course}
+                                courseId={course.id}
+                            />
                         </div>
                     </div>
                     <div>
@@ -128,7 +143,7 @@ const CourseIdPage = async ({ params }: {
                         />
                     </div>
                     <div>
-                    <div className="flex items-center gap-x-2">
+                        <div className="flex items-center gap-x-2">
                             <IconBadge icon={File} />
                             <h2 className="text-xl">
                                 Resources & Attachments

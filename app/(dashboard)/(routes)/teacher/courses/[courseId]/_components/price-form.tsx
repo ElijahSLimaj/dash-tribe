@@ -23,7 +23,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@prisma/client";
 import { format } from "path";
 import { formatPrice } from "@/lib/format";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 interface PriceFormProps {
     initialData: Course;
